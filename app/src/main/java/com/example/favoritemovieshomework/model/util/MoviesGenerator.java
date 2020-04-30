@@ -1,4 +1,6 @@
-package com.example.favoritemovieshomework.model;
+package com.example.favoritemovieshomework.model.util;
+
+import com.example.favoritemovieshomework.model.Movie;
 
 import java.util.ArrayList;
 import java.util.List;

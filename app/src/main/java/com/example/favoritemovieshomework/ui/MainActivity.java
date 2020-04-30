@@ -9,12 +9,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.example.favoritemovieshomework.R;
-import com.example.favoritemovieshomework.model.Database;
+import com.example.favoritemovieshomework.model.db.Database;
 import com.example.favoritemovieshomework.model.Movie;
-import com.example.favoritemovieshomework.model.MoviesGenerator;
+import com.example.favoritemovieshomework.model.util.MoviesGenerator;
+import com.example.favoritemovieshomework.repos.DBMovieRepository;
+import com.example.favoritemovieshomework.repos.MovieRepository;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity implements AddMovieFragment.AddMovieListener, MovieAdapter.MovieRatingListener {
@@ -24,14 +25,17 @@ public class MainActivity extends AppCompatActivity implements AddMovieFragment.
     private FloatingActionButton fab;
     private MovieAdapter movieAdapter;
 
-    private Database database;
+    MovieRepository movieRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        database = new Database(MoviesGenerator.generateMovies());
+        Database database = new Database();
+        movieRepository = new DBMovieRepository(database);
+        movieRepository.addMovies(MoviesGenerator.generateMovies());
+
 
         recyclerView = findViewById(R.id.recyclerView);
         fab = findViewById(R.id.floatingActionButton);
@@ -46,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements AddMovieFragment.
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        movieAdapter = new MovieAdapter(database.getAllMovies(), this);
+        movieAdapter = new MovieAdapter(movieRepository.getAllMovies(), this);
 
         recyclerView.setAdapter(movieAdapter);
 
@@ -63,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements AddMovieFragment.
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
-                if (database.deleteMovie(position)) {
+                if (movieRepository.deleteMovie(position)) {
                     movieAdapter.notifyDataSetChanged();
                 }
             }
@@ -72,14 +76,14 @@ public class MainActivity extends AppCompatActivity implements AddMovieFragment.
 
     @Override
     public void onMovieAdd(Movie movie) {
-        if (database.addMovie(movie)) {
+        if (movieRepository.addMovie(movie)) {
             movieAdapter.notifyDataSetChanged();
         }
     }
 
     @Override
     public void onRatingChanged(int position, int newRating) {
-        if (database.changeRating(position, newRating)) {
+        if (movieRepository.changeRating(position, newRating)) {
             movieAdapter.notifyDataSetChanged();
         }
     }
