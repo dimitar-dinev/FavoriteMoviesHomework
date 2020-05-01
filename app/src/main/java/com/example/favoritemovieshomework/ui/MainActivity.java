@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 
 import com.example.favoritemovieshomework.R;
+import com.example.favoritemovieshomework.model.MovieValidator;
 import com.example.favoritemovieshomework.model.db.Database;
 import com.example.favoritemovieshomework.model.Movie;
 import com.example.favoritemovieshomework.model.util.MoviesGenerator;
@@ -21,6 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 public class MainActivity extends AppCompatActivity implements AddMovieFragment.AddMovieListener, MovieAdapter.MovieRatingListener {
 
     public static final String TAG = "MAINACTIVITY";
+
     private RecyclerView recyclerView;
     private FloatingActionButton fab;
     private MovieAdapter movieAdapter;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements AddMovieFragment.
             FragmentManager fragmentManager = getSupportFragmentManager();
             AddMovieFragment addMovieFragment = AddMovieFragment.newInstance();
             addMovieFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog);
+            addMovieFragment.setValidator(new MovieValidator());
             addMovieFragment.show(fragmentManager, "addMovieFragment");
         });
 
@@ -84,6 +87,5 @@ public class MainActivity extends AppCompatActivity implements AddMovieFragment.
     public void onRatingChanged(int position, int newRating) {
         movieRepository.changeRating(position, newRating);
         movieAdapter.notifyDataSetChanged();
-
     }
 }

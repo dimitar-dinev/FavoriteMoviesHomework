@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">FavoriteMoviesHomework</string>
+    <string name="director_error">Director name should be at least 5 characters!</string>
+    <string name="title_error">Title should containt at least 1 character!</string>
+    <string name="genre_error">Genre should be at least 3 characters!</string>
+    <string name="year_error">Year should bebetween 1920 and 2020</string>
 </resources>

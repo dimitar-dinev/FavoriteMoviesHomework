@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +15,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.favoritemovieshomework.R;
 import com.example.favoritemovieshomework.model.Movie;
+import com.example.favoritemovieshomework.model.MovieValidator;
 
 public class AddMovieFragment extends DialogFragment {
 
@@ -21,12 +23,16 @@ public class AddMovieFragment extends DialogFragment {
         void onMovieAdd(Movie movie);
     }
 
-
     private AddMovieFragment() {}
-
 
     public static AddMovieFragment newInstance() {
         return new AddMovieFragment();
+    }
+
+    private MovieValidator validator;
+
+    public void setValidator(MovieValidator validator) {
+        this.validator = validator;
     }
 
     @Nullable
@@ -61,14 +67,28 @@ public class AddMovieFragment extends DialogFragment {
             String genre = genreEditText.getText().toString();
             String year = yearEditText.getText().toString();
 
-            if (!title.isEmpty() && !director.isEmpty() && !genre.isEmpty() && !year.isEmpty()) {
-
+            if (validator.validate(title, director, genre, year)) {
                 AddMovieListener listener = ((AddMovieListener) getActivity());
                 if (listener != null) {
                     listener.onMovieAdd(new Movie(title, director, genre, Integer.parseInt(year)));
                     dismiss();
                 }
+            } else {
+                displayError();
             }
         });
+    }
+    
+    private void displayError() {
+        switch (validator.getError()) {
+            case MovieValidator.DIRECTOR_ERROR:
+                Toast.makeText(getActivity(), R.string.director_error, Toast.LENGTH_SHORT).show(); break;
+            case MovieValidator.TITLE_ERROR:
+                Toast.makeText(getActivity(), R.string.title_error, Toast.LENGTH_SHORT).show(); break;
+            case MovieValidator.GENRE_ERROR:
+                Toast.makeText(getActivity(), R.string.genre_error, Toast.LENGTH_SHORT).show(); break;
+            case MovieValidator.YEAR_ERROR:
+                Toast.makeText(getActivity(), R.string.year_error, Toast.LENGTH_SHORT).show(); break;
+        }
     }
 }
