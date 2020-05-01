@@ -14,8 +14,8 @@ import com.example.favoritemovieshomework.R;
 import com.example.favoritemovieshomework.model.db.Database;
 import com.example.favoritemovieshomework.model.Movie;
 import com.example.favoritemovieshomework.model.util.MoviesGenerator;
-import com.example.favoritemovieshomework.repos.DBMovieRepository;
-import com.example.favoritemovieshomework.repos.MovieRepository;
+import com.example.favoritemovieshomework.repository.DBMovieRepository;
+import com.example.favoritemovieshomework.repository.MovieRepository;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity implements AddMovieFragment.AddMovieListener, MovieAdapter.MovieRatingListener {
@@ -67,24 +67,23 @@ public class MainActivity extends AppCompatActivity implements AddMovieFragment.
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
-                if (movieRepository.deleteMovie(position)) {
-                    movieAdapter.notifyDataSetChanged();
-                }
+                movieRepository.deleteMovie(position);
+                movieAdapter.notifyDataSetChanged();
+
             }
         }).attachToRecyclerView(recyclerView);
     }
 
     @Override
     public void onMovieAdd(Movie movie) {
-        if (movieRepository.addMovie(movie)) {
-            movieAdapter.notifyDataSetChanged();
-        }
+        movieRepository.addMovie(movie);
+        movieAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onRatingChanged(int position, int newRating) {
-        if (movieRepository.changeRating(position, newRating)) {
-            movieAdapter.notifyDataSetChanged();
-        }
+        movieRepository.changeRating(position, newRating);
+        movieAdapter.notifyDataSetChanged();
+
     }
 }

@@ -22,8 +22,7 @@ public class AddMovieFragment extends DialogFragment {
     }
 
 
-    private AddMovieFragment() {
-    }
+    private AddMovieFragment() {}
 
 
     public static AddMovieFragment newInstance() {

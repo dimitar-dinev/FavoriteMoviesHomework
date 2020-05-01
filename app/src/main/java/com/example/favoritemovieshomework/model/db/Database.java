@@ -12,5 +12,4 @@ public class Database {
     public List<Movie> getAllMovies() {
         return allMovies;
     }
-
 }
